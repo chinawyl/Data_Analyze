@@ -80,11 +80,37 @@ b.sum(axis=1) #axis= 1 对a的纵轴进行操作，在运算的过程中其运�
 f = pd.Series([1,2,34,74,6,4],index=list("abcdef"))  #索引和值个数要相同
 ```
 
-十四、pandas的series取多个值加个[]
+十四、pandas的series索引
 
 ```python
 x[[2,3,6]]
 x[["C","E","G","I"]]
+
+#连续多个值(普通切片，左闭右开)
+print(x[0:4])
+print("*"*100)
+
+#连续多个值(标签切片，左闭右闭)
+print(x["A":"E"])
+print("*"*100)
+
+A    0
+B    1
+C    2
+D    3
+dtype: int64
+****************************************************************************************
+A    0
+B    1
+C    2
+D    3
+E    4
+dtype: int64
+****************************************************************************************
+
+#获取index和value不用加括号
+print(x.index,type(x.index))
+print(x.values,type(x.values))
 ```
 
 十五、pandas的dataframe两种字典写法
@@ -97,16 +123,36 @@ d2 = [{"name":"ztfl","age":20,"tel":10086},{"name":"xyql","age":26},{"name":"scs
 
 十六、dataframe取数据
 
+1.loc和iloc后面是[]不是()
+
+2.:用符号取包括右边，数字取不包括
+
+```python
+#df.loc 通过标签索引行列数据
+t.loc["a","Z"]
+t.loc["a":"c",["W","Z"]] #冒号是闭合的，包括冒号后面的数据
+```
+
+3.dataframe不加loc和iloc只能取行或列
+
 ```python
 df[:20] #写数字表示取行
 
 df["Row_Labels"] #写字符串，取列
 
-#df.loc 通过标签索引行列数据
-t.loc["a","Z"]
-t.loc["a":"c",["W","Z"]] #loc的冒号是闭合的，包括冒号后面的数据
+#t字符串
+W	X	Y	Z
+a	0	1	2	3
+b	4	5	6	7
+c	8	9	10	11
 
-#df.iloc 通过位置获取行数据
+t["a"]会报错
+取单行t[0]会报错，要写成t[0:1]
+```
+
+4.连续或不连续
+
+```python
 #不连续的行列
 t.iloc[[0,2],[2,1]]
 #连续的行列
@@ -116,16 +162,20 @@ t.iloc[1:,:2]
 t.iloc[1:,:2] = np.NAN
 ```
 
-十七、dataframe多个条件用&或|
+十七、dataframe多个条件用&或|，且每个条件要加()
 
 ```python
 clean = df[(df["Row_Labels"].str.len()>4)&(df["Count_AnimalName"]>700)]
 ```
 
-十八、dataframe排序
+十八、dataframe排序和常用属性方法
 
 ```python
 df = df.sort_values(by="Count_AnimalName",ascending=False) #False为倒序
+
+属性记得加()
+df.info()
+df.describe()
 ```
 
 十九、dataframe缺失值处理
@@ -140,3 +190,113 @@ t2.fillna(t2.mean()) #也可以单独填充某一列
 ```
 
 注:pandas的nan不参与计算
+
+二十、取值要用values，否则有坐标，且不用加()
+
+```python
+print(df["Runtime (Minutes)"])
+0      121
+1      124
+2      117
+3      108
+4      123
+5      103
+6      128
+7       89
+8      141
+9      116
+10     133
+11     127
+12     133
+13     107
+14     109
+15      87
+16     139
+17     123
+18     118
+19     116
+20     120
+21     137
+22     108
+23      92
+24     120
+25      83
+26     159
+27      99
+28     100
+29     115
+      ... 
+970     92
+971    105
+972    123
+973    111
+974    124
+975     94
+976    113
+977     92
+978     97
+979    120
+980    109
+981    118
+982    133
+983    104
+984    111
+985    102
+986     92
+987    104
+988     99
+989    128
+990     92
+991    165
+992     97
+993     97
+994     88
+995    111
+996     94
+997     98
+998     93
+999     87
+Name: Runtime (Minutes), Length: 1000, dtype: int64
+
+即print(df["Runtime (Minutes)"].values)
+```
+
+二十一、求某列长度
+
+```python
+#导演人数
+print(len(set(df["Director"].tolist())))
+print(len(df["Director"].unique())) #unique直接转换为列表，且唯一
+
+#演员人数
+temp_actor_list = df["Actors"].str.split(",").tolist()
+actor_list = [i for j in temp_actor_list for i in j ]
+actor_numbers = len(set(actor_list))
+```
+
+二十二、多个条件分组聚合
+
+```python
+grouped1 = df["Brand"].groupby(by=[df["Country"],df["State/Province"]]).count() ##返回Series
+grouped2 = df.groupby(by=[df["Country"],df["State/Province"]])[["Brand"]].count() #返回DataFrame
+grouped3 = df.groupby(by=[df["Country"],df["State/Province"]]).count()[["Brand"]] #返回DataFrame
+```
+
+二十三、DataFrame设置复合索引加[]
+
+```python
+df.set_index(["W","X"])
+
+		Y	Z
+W	X		
+0	1	2	3
+4	5	6	7
+8	9	10	11
+
+df.set_index(["W","X"]).index
+
+MultiIndex(levels=[[0, 4, 8], [1, 5, 9]],
+           codes=[[0, 1, 2], [0, 1, 2]],
+           names=['W', 'X'])
+```
+
