@@ -6,7 +6,7 @@
 
 二、DataFrame常用属性和方法
 
-![001](D:\Data_Analyze\pandas\dataframe\001.png)
+![001](001.png)
 
 三、还有更多的经过pandas优化过的选择方式
 
@@ -16,7 +16,7 @@
 
 四、pandas之布尔索引
 
-![002](D:\Data_Analyze\pandas\dataframe\002.png)
+![002](002.png)
 
 注：
 
@@ -26,7 +26,7 @@
 
 五、pandas之字符串方法
 
-![003](D:\Data_Analyze\pandas\dataframe\003.png)
+![003](003.png)
 
 六、缺失数据的处理
 

@@ -6,11 +6,11 @@
 
 2.start和periods以及freq配合能够生成从start开始的频率为freq的periods个时间索引
 
-![003](D:\Data_Analyze\数据处理\数据的合并和分组聚合\003.png)二、转换pandas时间类型与重采样
+![003](003.png)二、转换pandas时间类型与重采样
 
 重采样：指的是将时间序列从一个频率转化为另一个频率进行处理的过程，将高频率数据转化为低频率数据为降采样，低频率转化为高频率为升采样
 
-![004](D:\Data_Analyze\数据处理\数据的合并和分组聚合\004.png)
+![004](004.png)
 
 ```python
 df["timeStamp"] = pd.to_datetime(df["timeStamp"])
